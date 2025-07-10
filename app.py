@@ -2,19 +2,19 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import joblib
-from sklearn.preprocessing import OrdinalEncoder
 
 @st.cache_resource
-def load_model_and_scaler():
+def load_models():
     try:
         model = joblib.load('models/salary_prediction_model.pkl')
         scaler = joblib.load('models/scaler.pkl')
-        return model, scaler
+        encoder = joblib.load('models/encoder.pkl')
+        return model, scaler, encoder
     except FileNotFoundError as e:
         st.error(f"Model file not found: {e}")
-        return None, None
+        return None, None, None
 
-def preprocess_input(job_title,experience_level,employment_type,company_location,company_size,employee_residence,remote_ratio,education_required,years_experience,industry, scaler):
+def preprocess_input(job_title,experience_level,employment_type,company_location,company_size,employee_residence,remote_ratio,education_required,years_experience,industry, scaler, encoder):
     if scaler is None:
         raise ValueError("Scaler not loaded properly")
 
@@ -37,7 +37,6 @@ def preprocess_input(job_title,experience_level,employment_type,company_location
     input_data['experience_level'] = input_data['experience_level'].map(exp_mapping)
 
     # Apply ordinal encoding for categorical variables
-    encoder = OrdinalEncoder()
     categorical_cols = ['job_title', 'experience_level', 'employment_type','company_location','company_size',
                         'employee_residence', 'education_required', 'industry']
     
@@ -60,10 +59,10 @@ def main():
     st.markdown("Predict your salary based on job characteristics using machine learning!")
 
     # Load model and preprocessors
-    model, scaler = load_model_and_scaler()
+    model, scaler, encoder = load_models()
 
-    if model is None:
-        st.error("Failed to load model. Please ensure model files are available.")
+    if model is None or scaler is None or encoder is None:
+        st.error("Failed to load models. Please ensure model files are available.")
         return
 
     # Create two columns for a better layout
@@ -150,7 +149,7 @@ def main():
             input_processed = preprocess_input(
                 job_title, experience_level, employment_type, company_location,
                 company_size, employee_residence, work_setting, education_required,
-                years_experience, industry, scaler
+                years_experience, industry, scaler, encoder
             )
 
             # Make prediction
@@ -179,7 +178,7 @@ def main():
 
     # Footer
     st.markdown("---")
-    st.markdown("*Predictions are estimates based on historical data and may not reflect actual salaries*")
+    st.markdown("*Predictions are estimates based on historical data and may not reflect actual salaries!!*")
 
 if __name__ == "__main__":
     main()
