@@ -37,11 +37,11 @@ def preprocess_input(job_title,experience_level,employment_type,company_location
     input_data['experience_level'] = input_data['experience_level'].map(exp_mapping)
 
     # Apply ordinal encoding for categorical variables
-    categorical_cols = ['job_title', 'experience_level', 'employment_type','company_location','company_size',
+    categorical_cols = ['job_title', 'employment_type','company_location','company_size',
                         'employee_residence', 'education_required', 'industry']
     
     # Fit and transform (note: in production, you should save the fitted encoder)
-    input_data[categorical_cols] = encoder.fit_transform(input_data[categorical_cols])
+    input_data[categorical_cols] = encoder.transform(input_data[categorical_cols])
 
     # Apply standard scaling
     input_scaled = scaler.transform(input_data)
@@ -90,8 +90,8 @@ def main():
         years_experience = st.number_input(
             "Years of Experience",
             min_value=0,
-            max_value=50,
-            value=5,
+            max_value=25,
+            value=2,
             step=1,
             help="Enter your total years of professional experience"
         )
@@ -115,7 +115,9 @@ def main():
 
         company_location = st.selectbox(
             "Company Location",
-            options=["US", "GB", "CA", "DE", "FR", "IN", "NL", "ES", "AU", "BR", "JP", "Other"]
+            options=['United States','India','Canada','France','Austria','Singapore','China','Denmark','Sweden',
+                    'Israel','Ireland','Switzerland','Japan','Finland','Australia','Netherlands','United Kingdom',
+                    'Germany','South Korea','Norway']
         )
 
         company_size = st.selectbox(
@@ -128,18 +130,21 @@ def main():
 
         employee_residence = st.selectbox(
             "Employee Residence",
-            options=["US", "GB", "CA", "DE", "FR", "IN", "NL", "ES", "AU", "BR", "JP", "Other"]
+            options=['United States','India','Canada','France','Austria','Singapore','China','Denmark','Sweden',
+                    'Israel','Ireland','Switzerland','Japan','Finland','Australia','Netherlands','United Kingdom',
+                    'Germany','South Korea','Norway']
         )
         
         education_required = st.selectbox(
             "Education Required",
-            options=["Bachelor's", "Master's", "PhD", "None"]
+            options=["Bachelor", "Master", "PhD", "Associate"]
         )
 
         industry = st.selectbox(
             "Industry",
             options=["Technology", "Healthcare", "Finance", "Manufacturing",
-                     "Retail", "Education", "Other"]
+                     "Retail", "Education","Media","Automotive","Consulting","Real Estate",
+                    "Government","Transportation","Telecommunications","Finance","Energy","Gaming"]
         )
     
     # Prediction button
