@@ -108,7 +108,6 @@ def main():
             options=[0, 50, 100],
             format_func=lambda x: {0: "In-person", 50: "Hybrid", 100: "Remote"}[x]
         )
-        
 
     with col2:
         st.subheader("Company Information")
