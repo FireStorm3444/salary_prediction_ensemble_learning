@@ -69,7 +69,7 @@ streamlit run app.py
 
 ```bash
 git lfs install
-git clone https://github.com/your-username/your-repo-name.git
+git clone [https://github.com/FireStorm3444/salary_prediction_ensemble_learning.git]
 cd your-repo-name
 streamlit run app.py
 ```
